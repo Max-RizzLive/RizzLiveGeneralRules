@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rizz Live — General Rules</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #020408;
+    --deep: #050d1a;
+    --nebula-blue: #0a1628;
+    --star-white: #e8f4ff;
+    --glow-cyan: #00d4ff;
+    --glow-purple: #9b5de5;
+    --glow-gold: #ffd166;
+    --glow-pink: #ff6b9d;
+    --glow-green: #06d6a0;
+    --dim: rgba(232,244,255,0.5);
+    --panel: rgba(10,22,40,0.85);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--void);
+    color: var(--star-white);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── SPACE CANVAS ── */
+  #space-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── NEBULA BLOBS ── */
+  .nebula {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 0;
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  .nb1 { width: 600px; height: 600px; background: var(--glow-purple); top: -200px; left: -200px; animation-delay: 0s; }
+  .nb2 { width: 500px; height: 500px; background: var(--glow-cyan); bottom: -200px; right: -200px; animation-delay: -7s; }
+  .nb3 { width: 400px; height: 400px; background: var(--glow-pink); top: 40%; left: 50%; animation-delay: -14s; }
+
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(40px, 30px) scale(1.08); }
+  }
+
+  /* ── LAYOUT ── */
+  .universe {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 16px 80px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 60px 20px 40px;
+    position: relative;
+  }
+
+  .logo-ring {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--glow-cyan), var(--glow-purple), var(--glow-pink), var(--glow-cyan));
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    animation: spin-ring 8s linear infinite;
+    box-shadow: 0 0 40px rgba(0,212,255,0.4);
+  }
+  .logo-inner {
+    width: 74px; height: 74px;
+    background: var(--void);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--glow-cyan);
+    letter-spacing: -1px;
+  }
+
+  @keyframes spin-ring {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(22px, 5vw, 42px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--glow-cyan), var(--glow-purple), var(--glow-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--dim);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+  }
+
+  .header-line {
+    width: 200px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--glow-cyan), transparent);
+    margin: 20px auto 0;
+  }
+
+  /* ── POLICY GRID ── */
+  .policy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 1000px;
+    margin-bottom: 40px;
+  }
+
+  .policy-card {
+    background: var(--panel);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 16px;
+    padding: 24px 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    backdrop-filter: blur(12px);
+  }
+
+  .policy-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--card-color, var(--glow-cyan)) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: inherit;
+  }
+
+  .policy-card:hover::before,
+  .policy-card.active::before { opacity: 0.08; }
+
+  .policy-card:hover,
+  .policy-card.active {
+    transform: translateY(-4px);
+    border-color: var(--card-color, var(--glow-cyan));
+    box-shadow: 0 0 30px rgba(0,0,0,0.5), 0 0 20px color-mix(in srgb, var(--card-color, var(--glow-cyan)) 30%, transparent);
+  }
+
+  .policy-card.active {
+    transform: translateY(-4px) scale(1.01);
+  }
+
+  .card-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+    filter: drop-shadow(0 0 8px var(--card-color, var(--glow-cyan)));
+  }
+
+  .card-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--card-color, var(--glow-cyan));
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--dim);
+    line-height: 1.5;
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--card-color, var(--glow-cyan));
+    color: var(--void);
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  .card-chevron {
+    position: absolute;
+    bottom: 14px; right: 16px;
+    color: var(--card-color, var(--glow-cyan));
+    opacity: 0.5;
+    font-size: 18px;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .policy-card:hover .card-chevron,
+  .policy-card.active .card-chevron {
+    opacity: 1;
+    transform: translateX(4px);
+  }
+
+  /* ── DETAIL PANEL ── */
+  #detail-panel {
+    width: 100%;
+    max-width: 1000px;
+    background: var(--panel);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+    display: none;
+    animation: panel-in 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(0,212,255,0.05);
+  }
+
+  @keyframes panel-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .panel-header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+  }
+
+  .panel-header-icon {
+    font-size: 36px;
+    filter: drop-shadow(0 0 12px var(--active-color, var(--glow-cyan)));
+  }
+
+  .panel-header-text h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(14px, 2.5vw, 20px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--active-color, var(--glow-cyan));
+  }
+
+  .panel-header-text p {
+    font-size: 13px;
+    color: var(--dim);
+    margin-top: 4px;
+  }
+
+  .panel-close {
+    position: absolute;
+    top: 20px; right: 24px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--dim);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .panel-close:hover { background: rgba(255,80,80,0.15); border-color: rgba(255,80,80,0.4); color: #ff6b6b; }
+
+  .panel-body {
+    padding: 28px 32px 32px;
+    max-height: 70vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,212,255,0.3) transparent;
+  }
+
+  /* ── POLICY CONTENT STYLES ── */
+  .section {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+  .section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--active-color, var(--glow-cyan));
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--active-color, var(--glow-cyan)), transparent);
+    opacity: 0.3;
+  }
+
+  .rule-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(232,244,255,0.85);
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    border-left: 3px solid transparent;
+    border-left-color: var(--active-color, var(--glow-cyan));
+    transition: background 0.2s;
+  }
+  .rule-item:hover { background: rgba(255,255,255,0.06); }
+
+  .rule-bullet {
+    color: var(--active-color, var(--glow-cyan));
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .numbered-item {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+
+  .num-badge {
+    background: linear-gradient(135deg, var(--active-color, var(--glow-cyan)), rgba(0,212,255,0.3));
+    color: var(--void);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 900;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .warning-box {
+    background: rgba(255,107,107,0.08);
+    border: 1px solid rgba(255,107,107,0.25);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: rgba(255,200,200,0.9);
+    line-height: 1.6;
+  }
+
+  .highlight-box {
+    background: rgba(255,209,102,0.07);
+    border: 1px solid rgba(255,209,102,0.25);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: rgba(255,240,180,0.9);
+    line-height: 1.6;
+  }
+
+  .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--active-color, var(--glow-cyan)), rgba(0,212,255,0.5));
+    color: var(--void);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px color-mix(in srgb, var(--active-color, var(--glow-cyan)) 40%, transparent);
+    margin-top: 8px;
+  }
+  .link-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--active-color, var(--glow-cyan)) 60%, transparent);
+  }
+  .link-btn svg { width: 14px; height: 14px; }
+
+  /* TABLE */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 14px;
+  }
+  .data-table th {
+    background: rgba(0,212,255,0.1);
+    color: var(--active-color, var(--glow-cyan));
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0,212,255,0.2);
+  }
+  .data-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: rgba(232,244,255,0.8);
+  }
+  .data-table tr:hover td { background: rgba(255,255,255,0.04); }
+
+  /* ── SCROLLBAR ── */
+  .panel-body::-webkit-scrollbar { width: 4px; }
+  .panel-body::-webkit-scrollbar-track { background: transparent; }
+  .panel-body::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.3); border-radius: 2px; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 40px 0 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: rgba(232,244,255,0.2);
+    letter-spacing: 2px;
+    position: relative; z-index: 1;
+  }
+
+  /* ── SHOOTING STARS ── */
+  .star-trail {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="space-canvas"></canvas>
+<div class="nebula nb1"></div>
+<div class="nebula nb2"></div>
+<div class="nebula nb3"></div>
+
+<div class="universe">
+  <header>
+    <div class="logo-ring"><div class="logo-inner">RL</div></div>
+    <h1>Rizz Live</h1>
+    <p class="subtitle">General Set of Rules &amp; Policies</p>
+    <div class="header-line"></div>
+  </header>
+
+  <div class="policy-grid" id="policy-grid">
+
+    <div class="policy-card" style="--card-color:#00d4ff" onclick="showPolicy('transfer')">
+      <div class="card-badge">TRANSFER</div>
+      <span class="card-icon">🚀</span>
+      <div class="card-title">Agency Transfer Policy</div>
+      <div class="card-desc">Rules for moving between agencies, with or without owner approval.</div>
+      <span class="card-chevron">→</span>
+    </div>
+
+    <div class="policy-card" style="--card-color:#9b5de5" onclick="showPolicy('double')">
+      <div class="card-badge">HOSTING</div>
+      <span class="card-icon">🌌</span>
+      <div class="card-title">Double Hosting Policy</div>
+      <div class="card-desc">Restrictions on hosting under multiple agencies simultaneously.</div>
+      <span class="card-chevron">→</span>
+    </div>
+
+    <div class="policy-card" style="--card-color:#ffd166" onclick="showPolicy('levelup')">
+      <div class="card-badge">LEVELS</div>
+      <span class="card-icon">⭐</span>
+      <div class="card-title">Level Up Policy</div>
+      <div class="card-desc">Upgrade your level when joining from another streaming platform.</div>
+      <span class="card-chevron">→</span>
+    </div>
+
+    <div class="policy-card" style="--card-color:#ff6b9d" onclick="showPolicy('recharge')">
+      <div class="card-badge">EVENT</div>
+      <span class="card-icon">💎</span>
+      <div class="card-title">VIP Carnival Recharge</div>
+      <div class="card-desc">Weekly recharge tiers to unlock VIP status and special IDs.</div>
+      <span class="card-chevron">→</span>
+    </div>
+
+    <div class="policy-card" style="--card-color:#06d6a0" onclick="showPolicy('admin')">
+      <div class="card-badge">HIRING</div>
+      <span class="card-icon">🛸</span>
+      <div class="card-title">Admin Hiring Policy</div>
+      <div class="card-desc">Requirements and process for Admin &amp; Super Admin positions.</div>
+      <span class="card-chevron">→</span>
+    </div>
+
+    <div class="policy-card" style="--card-color:#f77f00" onclick="showPolicy('conduct')">
+      <div class="card-badge">CONDUCT</div>
+      <span class="card-icon">🌠</span>
+      <div class="card-title">Professional Conduct</div>
+      <div class="card-desc">Standards of respect and consequences for misconduct.</div>
+      <span class="card-chevron">→</span>
+    </div>
+
+  </div>
+
+  <!-- DETAIL PANEL -->
+  <div id="detail-panel">
+    <div class="panel-header">
+      <div class="panel-header-icon" id="panel-icon"></div>
+      <div class="panel-header-text">
+        <h2 id="panel-title"></h2>
+        <p id="panel-subtitle"></p>
+      </div>
+      <button class="panel-close" onclick="closePanel()">✕</button>
+    </div>
+    <div class="panel-body" id="panel-body"></div>
+  </div>
+
+  <footer>© RIZZ LIVE · ALL RIGHTS RESERVED · PLATFORM RULES v1.0</footer>
+</div>
+
+<script>
+// ── STARFIELD ──
+const canvas = document.getElementById('space-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [], W, H;
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+function initStars(n) {
+  stars = [];
+  for (let i = 0; i < n; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.5 + 0.2,
+      a: Math.random(),
+      speed: Math.random() * 0.3 + 0.05,
+      twinkle: Math.random() * Math.PI * 2
+    });
+  }
+}
+initStars(280);
+
+let shooting = null;
+function maybeShoot() {
+  if (!shooting && Math.random() < 0.3) {
+    shooting = {
+      x: Math.random() * W * 0.6,
+      y: Math.random() * H * 0.4,
+      vx: 6 + Math.random() * 8,
+      vy: 3 + Math.random() * 5,
+      len: 100 + Math.random() * 80,
+      life: 1
+    };
+  }
+}
+
+function draw(t) {
+  ctx.clearRect(0, 0, W, H);
+  stars.forEach(s => {
+    s.twinkle += s.speed * 0.04;
+    const alpha = s.a * (0.6 + 0.4 * Math.sin(s.twinkle));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(220,240,255,${alpha})`;
+    ctx.fill();
+  });
+
+  if (shooting) {
+    const { x, y, vx, vy, len, life } = shooting;
+    const grad = ctx.createLinearGradient(x, y, x - vx * (len/8), y - vy * (len/8));
+    grad.addColorStop(0, `rgba(0,212,255,${life})`);
+    grad.addColorStop(1, 'rgba(0,212,255,0)');
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - vx * (len / 8), y - vy * (len / 8));
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    shooting.x += vx;
+    shooting.y += vy;
+    shooting.life -= 0.015;
+    if (shooting.life <= 0 || shooting.x > W + 50) shooting = null;
+  }
+
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+setInterval(maybeShoot, 2800);
+
+// ── POLICIES DATA ──
+const policies = {
+  transfer: {
+    icon: '🚀',
+    color: '#00d4ff',
+    title: 'Agency Transfer Policy',
+    subtitle: 'How hosts can move between agencies on Rizz Live',
+    content: `
+      <div class="section">
+        <div class="section-title">Method 1 — With Agency Owner Approval</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>The current Agency Owner may approve and allow the host's transfer to another agency.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>Once approval is provided, the transfer process will be completed by the management team.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>Agency Manager must send a formal request from their own ID to <strong>Rizz ID 500</strong> in message and share a screenshot to their admin.</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Method 2 — Without Agency Owner Approval</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>If the Agency Owner does not approve, the host may still request a transfer by purchasing coins worth <strong>500 USD</strong> on the Agency Owner's ID.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>After the coin purchase is verified, the host becomes eligible for transfer without needing agency permission.</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">⚠ Important Notes</div>
+        <div class="warning-box">▸ All transfer requests are subject to verification by platform management.</div>
+        <div class="warning-box">▸ Any fraudulent activity or fake transactions will result in rejection of the transfer request and possible account action.</div>
+        <div class="warning-box">▸ The platform reserves the right to review and update this policy at any time.</div>
+      </div>
+    `
+  },
+  double: {
+    icon: '🌌',
+    color: '#9b5de5',
+    title: 'Double Hosting Policy',
+    subtitle: 'Fairness and agency protection rules for all hosts',
+    content: `
+      <div class="section">
+        <div class="section-title">Double Hosting Restriction</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>No host is allowed to do double hosting under multiple agencies at the same time.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>A host cannot create or use another host ID to join a different agency while already registered under an existing agency.</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Agency Transfer Requirement</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>A host may only leave their current agency after receiving permission from their Agency Owner.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>If the Agency Owner does not approve the transfer, the host must purchase coins worth <strong>500 USD</strong> on the Agency Owner's ID to become eligible for transfer.</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Unauthorized Hosting Consequences</div>
+        <div class="warning-box">▸ If any host is found hosting from a new ID under another agency without completing the proper transfer process, the host will be transferred back to their original agency immediately.</div>
+        <div class="warning-box">▸ Additional disciplinary action may also be taken depending on the severity of the violation.</div>
+      </div>
+      <div class="section">
+        <div class="section-title">Management Authority</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>The management team reserves the right to investigate all cases related to double hosting and agency disputes.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>All final decisions made by management will be binding and must be respected by all parties involved.</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">📋 File a Complaint</div>
+        <p style="font-size:14px;color:var(--dim);margin-bottom:12px">To report a double hosting violation, submit a complaint using the official form below.</p>
+        <a class="link-btn" href="https://xjpumno595ok.jp.larksuite.com/wiki/WajxwCSoNiWZI8kmaIUja0aBp2e?from=from_copylink" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Complaint Form
+        </a>
+      </div>
+    `
+  },
+  levelup: {
+    icon: '⭐',
+    color: '#ffd166',
+    title: 'Level Up Policy',
+    subtitle: 'Upgrade your level when joining from another platform',
+    content: `
+      <div class="section">
+        <div class="section-title">Eligibility Requirements</div>
+        <p style="font-size:14px;color:var(--dim);margin-bottom:14px">To qualify for a level upgrade, you must complete all three steps:</p>
+        <div class="numbered-item">
+          <div class="num-badge">1</div>
+          <div class="rule-item" style="flex:1;margin-bottom:0"><span>Provide a clear screenshot of your ID/profile from your previous live streaming application.</span></div>
+        </div>
+        <div class="numbered-item">
+          <div class="num-badge">2</div>
+          <div class="rule-item" style="flex:1;margin-bottom:0"><span>Purchase at least <strong>1,000,000 coins</strong> from an official coin seller on Rizz Live.</span></div>
+        </div>
+        <div class="numbered-item">
+          <div class="num-badge">3</div>
+          <div class="rule-item" style="flex:1;margin-bottom:0"><span>Submit proof of coin purchase along with the previous app screenshot for verification.</span></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">Level Conversion Chart</div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Previous App Level</th><th>Rizz Live Level</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>50</td><td>15</td></tr>
+            <tr><td>100</td><td>20</td></tr>
+            <tr><td>150</td><td>35</td></tr>
+            <tr><td>200</td><td>50</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="section">
+        <div class="section-title">⚠ Important Notes</div>
+        <div class="warning-box">▸ All screenshots and purchase proofs must be genuine and clearly visible.</div>
+        <div class="warning-box">▸ Fake or edited screenshots will result in rejection of the request.</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>Level upgrades are subject to final approval by the management team.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>The platform reserves the right to modify or update this policy at any time.</span></div>
+      </div>
+    `
+  },
+  recharge: {
+    icon: '💎',
+    color: '#ff6b9d',
+    title: 'Weekly VIP Carnival — Recharge Event',
+    subtitle: 'Recharge more, unlock more! Weekly VIP tiers',
+    content: `
+      <div class="section">
+        <div class="section-title">VIP Carnival Rewards Table</div>
+        <table class="data-table">
+          <thead>
+            <tr><th>One-Time Recharge</th><th>VIP (7 Days)</th><th>Special ID (7 Days)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>500K</td><td>Ranger</td><td>—</td></tr>
+            <tr><td>1 Million</td><td>Knight</td><td>—</td></tr>
+            <tr><td>2 Million</td><td>Lord</td><td>—</td></tr>
+            <tr><td>5 Million</td><td>Duke</td><td>6 Digits</td></tr>
+            <tr><td>7 Million</td><td>King</td><td>5 Digits</td></tr>
+            <tr><td>15 Million</td><td>Emperor</td><td>4 Digits</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="section">
+        <div class="section-title">Rules</div>
+        <div class="numbered-item">
+          <div class="num-badge">1</div>
+          <div class="rule-item" style="flex:1;margin-bottom:0"><span>Rewards will be sent every day. Recharge from the reseller and request the reseller to give you the privilege.</span></div>
+        </div>
+        <div class="numbered-item">
+          <div class="num-badge">2</div>
+          <div class="rule-item" style="flex:1;margin-bottom:0"><span>Recharge will be calculated based on recharge from reseller only.</span></div>
+        </div>
+        <div class="numbered-item">
+          <div class="num-badge">3</div>
+          <div class="highlight-box" style="flex:1;margin-bottom:0">This is applicable only on <strong>single recharge</strong>. For example, a person must recharge <strong>15 million coins in one shot</strong> from the reseller to get the Emperor title and 4-digit special ID.</div>
+        </div>
+      </div>
+    `
+  },
+  admin: {
+    icon: '🛸',
+    color: '#06d6a0',
+    title: 'Admin & Super Admin Hiring Policy',
+    subtitle: 'Requirements and process for leadership positions',
+    content: `
+      <div class="section">
+        <div class="section-title">Application Process</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>All candidates must complete and submit the official application form.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>Applications submitted outside the official form process will not be considered.</span></div>
+        <a class="link-btn" href="https://xjpumno595ok.jp.larksuite.com/wiki/Diegw4Zhbi9hEjka6PkjAF9hpAf?from=from_copylink" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Open Application Form
+        </a>
+      </div>
+      <div class="section">
+        <div class="section-title">Eligibility Requirements</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>Only applicants with prior experience in agency management, leadership, or related platform operations will be eligible.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>Management reserves the right to verify previous experience before approval.</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Selection Criteria</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span><strong>Past Experience</strong> — Relevant background in managing platforms or agencies.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span><strong>Performance History</strong> — Track record of results and reliability.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span><strong>Professional Conduct</strong> — Respectful and rule-abiding behaviour.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span><strong>Contribution Potential</strong> — Ability to grow the platform.</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Tag & Admin Frame Policy</div>
+        <div class="highlight-box">Admin Tag and Admin Frame rewards are only provided after completing <strong>5 agencies</strong> with a combined total revenue of <strong>30 Million</strong>.</div>
+      </div>
+      <div class="section">
+        <div class="section-title">⚠ Violations</div>
+        <div class="warning-box">Misuse of authority, fake revenue generation, or rule violations may result in: removal of position, removal of tags/frames/privileges, or permanent disqualification from future positions.</div>
+      </div>
+      <div class="section">
+        <div class="section-title">Final Authority</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>Management holds final authority over hiring decisions, reward approvals, policy interpretation, and position termination.</span></div>
+      </div>
+    `
+  },
+  conduct: {
+    icon: '🌠',
+    color: '#f77f00',
+    title: 'Professional Conduct & Respect Policy',
+    subtitle: 'Standards of behaviour for all Rizz Live members',
+    content: `
+      <div class="section">
+        <div class="section-title">Respectful Behaviour</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>No person is allowed to publicly or privately discuss, spread, or promote negative comments, flaws, rumors, or bad points about any individual, organization, authority, agency, or platform.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>Everyone must communicate respectfully and professionally at all times.</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Harassment & Misconduct</div>
+        <div class="warning-box">▸ No Admin, Super Admin, Country Admin, Agency Owner, or Host is allowed to harass, insult, threaten, defame, or speak badly about any person or organization.</div>
+        <div class="warning-box">▸ Any kind of toxic behaviour, personal attacks, or intentional damage to someone's reputation is strictly prohibited.</div>
+      </div>
+      <div class="section">
+        <div class="section-title">Punishment & Disciplinary Action</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>If any individual is found violating this policy, disciplinary action will be taken according to the severity of the matter.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>Punishment may include <strong>warnings, temporary suspension, permanent removal, demotion</strong>, or any other action decided by the management team.</span></div>
+      </div>
+      <div class="section">
+        <div class="section-title">Management Rights</div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>The management team holds full authority to investigate cases and make final decisions regarding violations of this policy.</span></div>
+        <div class="rule-item"><span class="rule-bullet">▸</span><span>All decisions made by management will be considered final.</span></div>
+      </div>
+    `
+  }
+};
+
+let activePolicy = null;
+
+function showPolicy(key) {
+  const p = policies[key];
+  if (!p) return;
+
+  // Update active card
+  document.querySelectorAll('.policy-card').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  // Set CSS variable for color
+  document.getElementById('detail-panel').style.setProperty('--active-color', p.color);
+  document.getElementById('detail-panel').style.borderColor = p.color + '40';
+
+  // Fill panel
+  document.getElementById('panel-icon').textContent = p.icon;
+  document.getElementById('panel-title').textContent = p.title;
+  document.getElementById('panel-subtitle').textContent = p.subtitle;
+  document.getElementById('panel-body').innerHTML = p.content;
+
+  // Show panel
+  const panel = document.getElementById('detail-panel');
+  panel.style.display = 'block';
+  panel.style.animation = 'none';
+  void panel.offsetWidth;
+  panel.style.animation = 'panel-in 0.4s cubic-bezier(0.16,1,0.3,1) forwards';
+
+  // Scroll to panel
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+
+  activePolicy = key;
+}
+
+function closePanel() {
+  const panel = document.getElementById('detail-panel');
+  panel.style.opacity = '0';
+  panel.style.transform = 'translateY(10px) scale(0.98)';
+  panel.style.transition = 'opacity 0.25s, transform 0.25s';
+  setTimeout(() => {
+    panel.style.display = 'none';
+    panel.style.opacity = '';
+    panel.style.transform = '';
+    panel.style.transition = '';
+  }, 260);
+  document.querySelectorAll('.policy-card').forEach(c => c.classList.remove('active'));
+  activePolicy = null;
+}
+</script>
+</body>
+</html>
